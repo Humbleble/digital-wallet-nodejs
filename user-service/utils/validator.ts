@@ -1,7 +1,34 @@
-const Joi = require('joi');
+import Joi, { ValidationResult } from 'joi';
+
+interface IUser {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface ILoginData {
+  email: string;
+  password: string;
+}
+
+interface IWalletCreationData {
+  userId: string;
+  email: string;
+  initialBalance?: number;
+}
+
+interface ITransaction {
+  type: 'deposit' | 'withdraw' | 'transfer';
+  amount: number;
+  fromUserId?: string;
+  toUserId?: string;
+  currency?: string;
+}
 
 const validator = {
-  validateUser(user) {
+  // Define validation schema for user registration
+  validateUser(user: IUser): ValidationResult {
     const schema = Joi.object({
       email: Joi.string().email().required(),
       password: Joi.string().min(8).required(),
@@ -11,7 +38,8 @@ const validator = {
     return schema.validate(user);
   },
 
-  validateLogin(data) {
+  // Define validation schema for user login
+  validateLogin(data: ILoginData): ValidationResult {
     const schema = Joi.object({
       email: Joi.string().email().required(),
       password: Joi.string().required()
@@ -19,7 +47,8 @@ const validator = {
     return schema.validate(data);
   },
 
-  validateWalletCreation(data) {
+  // Define validation schema for wallet creation
+  validateWalletCreation(data: IWalletCreationData): ValidationResult {
     const schema = Joi.object({
       userId: Joi.string().required(),
       email: Joi.string().required(),
@@ -28,7 +57,8 @@ const validator = {
     return schema.validate(data);
   },
 
-  validateTransaction(transaction) {
+  // Define validation schema for transaction
+  validateTransaction(transaction: ITransaction): ValidationResult {
     const schema = Joi.object({
       type: Joi.string().valid('deposit', 'withdraw', 'transfer').required(),
       amount: Joi.number().positive().required(),
@@ -39,17 +69,20 @@ const validator = {
     return schema.validate(transaction);
   },
 
-  validateAmount(amount) {
+  // Define validation schema for amount
+  validateAmount(amount: number): ValidationResult {
     return Joi.number().positive().validate(amount);
   },
 
-  validateId(id) {
+  // Define validation schema for user ID
+  validateId(id: string): ValidationResult {
     return Joi.string().required().validate(id);
   },
 
-  validateEmail(email) {
+  // Define validation schema for email
+  validateEmail(email: string): ValidationResult {
     return Joi.string().email().required().validate(email);
   }
 };
 
-module.exports = validator;
+export default validator;

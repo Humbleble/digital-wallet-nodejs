@@ -1,6 +1,7 @@
-const winston = require('winston');
+import winston from 'winston';
 
 const logger = winston.createLogger({
+  // Change log level to 'debug' when developing
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
     winston.format.timestamp({
@@ -17,6 +18,7 @@ const logger = winston.createLogger({
   ]
 });
 
+// Add console transport for development
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
@@ -26,4 +28,4 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-module.exports = logger;
+export default logger;
